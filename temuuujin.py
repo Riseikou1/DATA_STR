@@ -683,17 +683,17 @@ class Head(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self,x):
-        B,T,C = x.shape
-        k = self.key(x)
+        B,T,C = x.shape  # 64,256,384
+        k = self.key(x)  # 384,64  ---> 64,256,64
         q = self.query(x)
         v = self.value(x)
 
-        wei = q @ k.transpose(-2,-1) * C ** -0.5
+        wei = q @ k.transpose(-2,-1) * C ** -0.5  # -> 64,256,64 @ 64,64,256 ---> 64,256,256
         wei = wei.masked_fill(self.tril[:T,:T]==0,float('-inf'))
         wei = F.softmax(wei,dim=-1)
         wei = self.dropout(wei)
 
-        out = wei @ v
+        out = wei @ v  # 64,256,256  @  64,256,64   --> 64,256,64
         return out
     
 class MultiHeadAttention(nn.Module):
@@ -737,14 +737,14 @@ class BigramLanguageModel(nn.Module):
     def __init__(self):
         super().__init__()
         self.token_embedding_table = nn.Embedding(vocab_size,n_embed)
-        self.position_embedding_table = nn.Embedding(block_size,block_size)
+        self.position_embedding_table = nn.Embedding(block_size,n_embed)
         self.blocks = nn.Sequential(*[Block(n_embed,n_head=n_head) for _ in range(n_layer)])
         self.ln_f = nn.LayerNorm(n_embed)
         self.lm_head = nn.Linear(n_embed,vocab_size)
 
     def forward(self,idx,targets=None):
-        B,T = idx.shape
-        tok_embed = self.token_embedding_table(idx)
+        B,T = idx.shape  # 64 , 256
+        tok_embed = self.token_embedding_table(idx)  # 65,384   <-- 64,256  ---> 64,256,384
         pos_embed = self.position_embedding_table(torch.arange(T))
         x = tok_embed + pos_embed
         x = self.blocks(x)
@@ -755,7 +755,7 @@ class BigramLanguageModel(nn.Module):
             loss = None
         else :
             B,T,C = logits.shape
-            logits = logits.view(B*T,C)
+            logits = logits.view(B*T,C)  # 64 * 256, 65
             targets = targets.view(B*T)
             loss = F.cross_entropy(logits,targets)
         return logits,loss
