@@ -91,8 +91,8 @@ def display(root, msg):
 
 if __name__ == "__main__":
     root = None
-    datas = [35, 18, 7, 26, 3, 22, 30, 12, 26, 68, 99]
-    #datas = [7,8,9,2,1,5,3,6,4]
+    #datas = [35, 18, 7, 26, 3, 22, 30, 12, 26, 68, 99]
+    datas = [7,10,4,6,5]
 
     for data in datas:
         root = insert(root, data)
