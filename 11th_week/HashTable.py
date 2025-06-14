@@ -54,7 +54,7 @@ class HashTable:
 
         for i in range(M):
             print("HT[%2d] : %2d"%(i,self.table[i]))
-
+        print()
 
 
 if __name__ == "__main__":
