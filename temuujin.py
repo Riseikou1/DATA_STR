@@ -1,83 +1,90 @@
-import queue
-
 class Node :
-    def __init__(self,data,left=None,right=None):
+    def __init__(self,data):
         self.data = data
-        self.right = right
-        self.left = left
+        self.right = None
+        self.left = None
+        self.height = 1
 
-class BinaryTree :
-    def __init__(self):
-        self.root = None
+def getHeight(root):
+    return root.height if root else 0
 
-    def insert(self,root,data):
-        if root is None :
-            return Node(data)
-        
-        if root.data > data :
-            root.left = self.insert(root.left,data)
+def getBalance(root):
+    return getHeight(root.left) - root(root.right) if root else 0
 
-        elif root.data < data :
-            root.right = self.insert(root.right,data)
+def rotateRight(p):
 
-        return root
-        
-    def getHeight(self,root):   
+    c = p.left
+    p.left = c.right
+    c.right = p
 
-        if root is None : return 0
+    p.height = 1 + max(getHeight(p.left) , getHeight(p.right))
+    c.height = 1 + max(getHeight(c.left) , getHeight(c.right))
+
+    return c 
+
+def rotateLeft(p):
+
+    c = p.right
+    p.right = c.left
+    c.left = p
+
+    p.height = 1 + max(getHeight(p.left) , getHeight(p.right))
+    c.height = 1 + max(getHeight(c.left) , getHeight(c.right))
+
+    return c 
+
+def insert(root,data):
+    if root is None :
+        return Node(data)   
+    if data < root.data :
+        root.left = insert(root.left,data)
+    elif data > root.data :
+        root.right = insert(root.right, data)
+    else : return root
+
+    root.height = 1 + max(getHeight(root.left),getHeight(root.right))
+
+    balance = getBalance(root)
+
+    if balance > 1 and data > root.left.data :
+        root.left = rotateLeft(root.left)
+        return rotateRight(root)
+
+    if balance > 1 and data < root.left.data:
+        return rotateRight(root)
+
+    if balance < -1 and data > root.right.data :
+        return rotateLeft(root)
+
+    if balance < -1 and data < root.left.data :
+
+        root.right = rotateRight(root.right)
+        return rotateLeft(root)
+    
+    return root
+
+def delete(root,data):
+    if root is None : return None
+
+    if data > root.data :
+        root.right = delete(root.right,data)
+    elif data < root.data :
+        root.left = delete(root.left,data)
+    else :
+        if root.right is None and root.left is None :
+            return None
+        elif root.right is None :
+            return root.left
+        elif root.left is None :
+            return root.right
         else :
-            return 1 + max(self.getHeight(root.left), self.getHeight(root.right))
+            successor = root.right
+            while successor.left :
+                successor = root.left
+            
+            root.data = successor.data
+
+            root.right = delete(root.right,successor.data)
     
-    def leafCount(self,root):
+    return root
 
-        if root is None : return None
-        if root.left is None and root.right is None : return 1
-
-        return self.leafCount(root.left) + self.leafCount(root.right)
-
-
-    def nodeCount(self,root):
-        if root is None :
-            return 0
-        else :
-            return 1 + self.nodeCount(root.left) + self.nodeCount(root.right)
-
-
-    
-    def inOrder(self,root):
-        if root is not None :
-            self.inOrder(root.left)
-            print(root.data , end= " ")
-            self.inOrder(root.right)
-
-    def postOrder(self,root):
-        if root is not None :
-            self.postOrder(root.left)
-            self.postOrder(root.right)
-            print(root.data, end=" ")
-
-    def preOrder(self,root):
-        if root is not None :
-            print(root.data, end= " ")
-            self.preOrder(root.left)
-            self.preOrder(root.right)
-
-    def levelOrder(self,root):
-        q = queue.Queue()
-        q.put(root)
-        while not q.empty():
-            root = q.get()
-            print(root.data , end=" ")
-            if root.left is not None :
-                q.put(root.left)
-            if root.right is not None :
-                q.put(root.right)
-        
-            print()
-    
-    def treeReverse(self,root):
-        if root is not None :
-            root.right, root.left = root.left , root.right
-            self.treeReverse(root.left)
-            self.treeReverse(root.right)
-        

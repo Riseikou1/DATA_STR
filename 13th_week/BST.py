@@ -66,5 +66,5 @@ if __name__ == "__main__":
 
     root = delete(root,35)
     display(root, '[Delete %2d] : ' % 35)
-    print(root.key)
+    print("root node : ",root.key)
 

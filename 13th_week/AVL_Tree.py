@@ -27,8 +27,9 @@ def rotateLeft(p):
 
 def rotateRight(p):
     c = p.left
-    p.left = c.right
+    T = c.right
     c.right = p
+    p.left = T
 
     p.height = 1 + max(getHeight(p.left), getHeight(p.right))
     c.height = 1 + max(getHeight(c.left), getHeight(c.right))
@@ -56,18 +57,18 @@ def insert(root, data):
         print("----LL type----")
         return rotateRight(root)
 
-    # Case 2: Right Right (RR)
+    # RR Case
     if balance < -1 and data > root.right.data:
         print("----RR type----")
         return rotateLeft(root)
 
-    # Case 3: Left Right (LR)
+    # LR Case
     if balance > 1 and data > root.left.data:
         print("----LR type----")
         root.left = rotateLeft(root.left)
         return rotateRight(root)
 
-    # Case 4: Right Left (RL)
+    # RL Case
     if balance < -1 and data < root.right.data:
         print("----RL type----")
         root.right = rotateRight(root.right)

@@ -44,7 +44,7 @@ class MaxHeap :
 
 if __name__ == "__main__":
     H = MaxHeap()
-    data = [9,7,6,5,4,3,2,1,3]
+    data = [3,7,6,5,4,9,2,1,3]
 
     for d in data :
         H.insertItem(d)
@@ -52,6 +52,7 @@ if __name__ == "__main__":
 
     print("------------------------")
     H.insertItem(8)
+    print("Inserting 8 to the shit.")
     print("Heap :",H.heap[1:H.heapSize+1])
     print("------------------------")
 
