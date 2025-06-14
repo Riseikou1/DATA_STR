@@ -10,6 +10,18 @@ class binaryTRee:
     def __init__(self):
         self.root = None
     
+    def insert(self,root,data):
+        if root is None :
+            return Node(data)
+        
+        if root.data > data :
+            root.left = self.insert(root.left,data)
+
+        elif root.data < data :
+            root.right = self.insert(root.right,data)
+
+        return root
+
     def postOrder(self,root):
         if root != None :
             self.postOrder(root.left)
@@ -85,6 +97,9 @@ if __name__ == "__main__":
     T.treeReverse(N1)
     print("Post traversing through Tree after reversing it.")
     T.postOrder(N1); print()
+
+    T.insert(N1,'G')
+    T.preOrder(N1); print()
 
 """                         'A'
                  'C'                  'B'
