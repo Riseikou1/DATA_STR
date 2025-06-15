@@ -1,95 +1,95 @@
-class Node:
-    def __init__(self, data):
+class Node :
+    def __init__(self,data):
         self.data = data
-        self.right = None
         self.left = None
-        self.height = 1  # Height of the node
-
+        self.right = None
 
 def getHeight(root):
-    return root.height if root else 0
-
+    if root is None :
+        return 0
+    return 1 + max(getHeight(root.left),getHeight(root.right))
 
 def getBalance(root):
-    return getHeight(root.left) - getHeight(root.right) if root else 0
+    return getHeight(root.left) - getHeight(root.right)
 
+
+def rotateRight(p):
+    c = p.left
+    p.left = c.right
+    c.right = p
+
+    return c
 
 def rotateLeft(p):
     c = p.right
     p.right = c.left
     c.left = p
 
-    p.height = 1 + max(getHeight(p.left), getHeight(p.right))
-    c.height = 1 + max(getHeight(c.left), getHeight(c.right))
+    return c
 
-    return c 
-
-
-def rotateRight(p):
-    c = p.left
-    T = c.right
-    c.right = p
-    p.left = T
-
-    p.height = 1 + max(getHeight(p.left), getHeight(p.right))
-    c.height = 1 + max(getHeight(c.left), getHeight(c.right))
-
-    return c  
-
-
-def insert(root, data):
-    if not root:
-        return Node(data)
-
-    if data < root.data:
-        root.left = insert(root.left, data)
-    elif data > root.data:
-        root.right = insert(root.right, data)
-    else:
-        return root 
-
-    root.height = 1 + max(getHeight(root.left), getHeight(root.right))
-
+def balancer(root,data):
     balance = getBalance(root)
 
-    # Case 1: Left Left (LL)
-    if balance > 1 and data < root.left.data:
-        print("----LL type----")
+    if balance > 1 :
+        if data > root.left.data :
+            root.left = rotateLeft(root.left)
         return rotateRight(root)
-
-    # RR Case
-    if balance < -1 and data > root.right.data:
-        print("----RR type----")
+    
+    if balance < -1 :
+        if data < root.right.data:
+            root.right = rotateRight(root.right)
         return rotateLeft(root)
-
-    # LR Case
-    if balance > 1 and data > root.left.data:
-        print("----LR type----")
-        root.left = rotateLeft(root.left)
-        return rotateRight(root)
-
-    # RL Case
-    if balance < -1 and data < root.right.data:
-        print("----RL type----")
-        root.right = rotateRight(root.right)
-        return rotateLeft(root)
-
+    
     return root
 
+def insert(root,data):
+    if root is None :
+        return Node(data)
+    if data < root.data :
+        root.left = insert(root.left,data)
+    elif data > root.data :
+        root.right = insert(root.right,data)
+    else :
+        return root
+    
+    return balancer(root,data)
+
+
+def delete(root,data):
+    if root is None : 
+        return None
+    
+    if data < root.data :
+        root.left = delete(root.left,data)
+    elif data > root.data :
+        root.right = delete(root.right,data)
+    else :
+        if root.right is None and root.left is None :
+            return None
+        elif root.right is None :
+            return root.left
+        elif root.left is None :
+            return root.right
+        else :
+            successor = root.right
+            while successor.left :
+                successor = successor.left
+            root.data = successor.data 
+            root.right = delete(root.right,successor.data)
+    
+    return balancer(root,data)
 
 def preOrder(root):
-    if root is not None:
-        print("%2d" % root.data, end=" ")
+    if root is not None :
+        print(root.data, end=" ")
         preOrder(root.left)
         preOrder(root.right)
 
-
-def display(root, msg):
-    print(msg, end='')
+def display(root,msg):
+    print(msg, end=" ")
     preOrder(root)
     print()
-
-
+    
 if __name__ == "__main__":
     root = None
     #datas = [35, 18, 7, 26, 3, 22, 30, 12, 26, 68, 99]
