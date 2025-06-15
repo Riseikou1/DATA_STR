@@ -13,7 +13,7 @@ class HashTable:
     def insert(self,data):
         hashVal = self.hashFn(data)
         for i in range(M):
-            #bucket = (hashVal+i) % M   # linera probing.
+            #bucket = (hashVal+i) % M   # linear probing.
             #bucket = (hashVal+i**2) % M   # quadratic probing
             bucket = (hashVal + i * self.hashFn2(data)) % M  # Double probing
             #bucket = (hashVal)

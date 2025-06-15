@@ -1,54 +1,54 @@
-Graph = {
-    'A': [('B', 29), ('F', 10)],
-    'B': [('A', 29), ('C', 16), ('G', 15)],
-    'C': [('B', 16), ('D', 12)],
-    'D': [('C', 12), ('E', 22), ('G', 18)],
-    'E': [('D', 22), ('F', 27), ('G', 25)],
-    'F': [('A', 10), ('E', 27)],
-    'G': [('B', 15), ('D', 18), ('E', 25)]
-}
+INF = float("inf")
 
-vName = sorted(Graph.keys())  # ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+vName = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+Graph = [
+    [ 0, 7, INF, INF, 3, 10, INF],
+    [ 7, 0, 4, 10, 2, 6, INF],
+    [INF, 4, 0, 2, INF, INF, INF],
+    [INF, 10, 2, 0, 11, 9, 4],
+    [ 3, 2, INF, 11, 0, 13, 5],
+    [ 10, 6, INF, 9, 13, 0, INF],
+    [INF, INF, INF, 4, 5, INF, 0]
+]
+
 vCnt = len(vName)
-index = {v: i for i, v in enumerate(vName)}  # map node name to index
-rev_index = {i: v for v, i in index.items()}  # reverse lookup
 
-visited = [False] * vCnt
-dist = [float('inf')] * vCnt
+dist = [INF] * vCnt   # 7 
+visited = [False] * vCnt  # 7
 
 def findMin():
-    minDist = float('inf')
-    minV = -1
+    minDist = INF
+    minV = 0
+
     for v in range(vCnt):
-        if not visited[v] and dist[v] < minDist:
-            minV = v
+        if visited[v] == False and dist[v] < minDist:
             minDist = dist[v]
-    return minV
+            minV = v
+    return minV    
 
 def display():
-    for d in dist:
-        if d == float('inf'):
+
+    for i in range(vCnt):
+        if dist[i] == INF:
             print(' ∞ ', end='')
         else:
-            print('%2d' % d, end=' ')
+            print('%2d ' % dist[i], end='')
     print()
 
-def dijkstra(start):
-    dist[index[start]] = 0
-    for _ in range(vCnt):
-        u = findMin()
-        if u == -1:
-            break
-        visited[u] = True
-        u_name = rev_index[u]
+def dijkstra(s):
+    dist[ord(s)-ord('A')] = 0
 
-        for v_name, weight in Graph[u_name]:
-            v = index[v_name]
-            if not visited[v] and dist[v] > dist[u] + weight:
-                dist[v] = dist[u] + weight
+    for i in range(vCnt):
+        s = findMin()
+        visited[s] = True
 
-        print('[%c] : ' % u_name, end='')
+        
+        for t in range(vCnt):
+            if dist[t] > dist[s] + Graph[s][t]:
+                dist[t] = dist[s] + Graph[s][t]
+
+        print('[%c] : ' % vName[s], end='')
         display()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     dijkstra('A')
