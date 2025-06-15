@@ -38,11 +38,11 @@ def display():
 def dijkstra(s):
     dist[ord(s)-ord('A')] = 0
 
-    for i in range(vCnt):
+    for _ in range(vCnt):
         s = findMin()
+        if s == -1 : break
         visited[s] = True
 
-        
         for t in range(vCnt):
             if dist[t] > dist[s] + Graph[s][t]:
                 dist[t] = dist[s] + Graph[s][t]
