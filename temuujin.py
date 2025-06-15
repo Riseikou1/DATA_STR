@@ -1,44 +1,48 @@
 Graph = {
-    'A':[('B', 29), ('F', 10)],
-    'B':[('A', 29),('C', 16),('G', 15)],
-    'C':[('B', 16),('D', 12)],
-    'D':[('C', 12),('E', 22),('G', 18)],
-    'E':[('D', 22),('F', 27),('G', 25)],
-    'F':[('A', 10),('E', 27)],
-    'G':[('B', 15),('D', 18),('E', 25)],
+    'A': [('B', 29), ('F', 10)],
+    'B': [('A', 29), ('C', 16), ('G', 15)],
+    'C': [('B', 16), ('D', 12)],
+    'D': [('C', 12), ('E', 22), ('G', 18)],
+    'E': [('D', 22), ('F', 27), ('G', 25)],
+    'F': [('A', 10), ('E', 27)],
+    'G': [('B', 15), ('D', 18), ('E', 25)]
 }
-vCnt = len(Graph)
-INF = 1000
-dist = [INF] * vCnt
-visited = [False] * vCnt
 
-def findMin():
-    minDist = INF
-    minV = 0
 
-    for v in range(vCnt):
-        if visited[v] == False and dist[v] < minDist:
-            minDist = dist[v]
-            minV = v
-    return minV     #6
+eList = []
+vertices = [-1] * 7
 
-def prim(start):
-    dist[ord(start)-65] = 0
+def edgeSort():
+    for v in Graph :
+        for e in Graph[v]:
+            if v < e[0]:
+                eList.append([v,e[0],e[1]])
 
-    for _ in range(vCnt):
-        for j in range(vCnt):
-            print(" * " if dist[j] == INF else "%3d " % dist[j], end="")
+    eList.sort(key = lambda e : e[2], reverse=True)
+
+    for i in range(len(eList)):
         print()
 
-        u = findMin()
-        visited[u] = True
-        uName = chr(u + 65)
+def find(vNum):
+    while vertices[vNum] != -1 :
+        vNum = vertices[vNum]
+    return vNum
 
-        for neighbor, weight in Graph[uName]:
-            v = ord(neighbor) - 65
-            if not visited[v] and weight < dist[v]:
-                dist[v] = weight
+def union(vNum1,vNum2):
+    vertices[vNum1] = vNum2
 
+def kruskal():
+    edgeSort()
+    eCnt = 0
+    vCnt = len(vertices)
 
-if __name__ == '__main__':
-    prim('G')
+    while eCnt < vCnt -1 :
+        e = eList.pop()
+        vNum1 = find(ord(e[0])-65)
+        vNum2 = find(ord(e[1])-65)
+
+        if vNum1 != vNum2 :
+            eCnt +=1 
+            union(vNum1,vNum2)
+
+        
