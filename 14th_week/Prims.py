@@ -23,7 +23,7 @@ def findMin():
     return minV
 
 def prims(start_char):
-    start = ord(start_char) - 65
+    start = ord(start_char) - ord('A') # or just -65
     dist[start] = 0
 
     for _ in range(size):
