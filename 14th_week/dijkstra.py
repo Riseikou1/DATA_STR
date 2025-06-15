@@ -18,7 +18,7 @@ visited = [False] * vCnt  # 7
 
 def findMin():
     minDist = INF
-    minV = 0
+    minV = -1
 
     for v in range(vCnt):
         if visited[v] == False and dist[v] < minDist:
@@ -39,16 +39,19 @@ def dijkstra(s):
     dist[ord(s)-ord('A')] = 0
 
     for _ in range(vCnt):
-        s = findMin()
-        if s == -1 : break
-        visited[s] = True
+        u = findMin()
+        if u == -1:
+            break
+        visited[u] = True
 
-        for t in range(vCnt):
-            if dist[t] > dist[s] + Graph[s][t]:
-                dist[t] = dist[s] + Graph[s][t]
+        for v in range(vCnt):
+            if not visited[v] and Graph[u][v] != INF:
+                if dist[v] > dist[u] + Graph[u][v]:
+                    dist[v] = dist[u] + Graph[u][v]
 
-        print('[%c] : ' % vName[s], end='')
+        print('[%c] : ' % vName[u], end='')
         display()
+
 
 if __name__ == '__main__':
     dijkstra('A')

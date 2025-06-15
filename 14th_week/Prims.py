@@ -30,7 +30,7 @@ def prims(start_char):
         # Print current dist array
         for j in range(size):
             if dist[j] == float('inf'):
-                print('  *', end=' ')
+                print(' * ', end='')
             else:
                 print('%3d' % dist[j], end=' ')
         print()
@@ -67,7 +67,7 @@ def display():
     for v in Graph:
         for e in Graph[v]:
             if v < e[0]:
-                print("[%s%s %d]" % (v, e[0], e[1]), end=" ")
+                print("[%s - %s : %d]" % (v, e[0], e[1]), end=" ")
         print()
 
 if __name__ == "__main__":
