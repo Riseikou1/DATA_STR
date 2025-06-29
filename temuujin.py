@@ -104,3 +104,23 @@ class Listtype:
 
             return data
         
+
+    def reverse(self):
+        if self.isEmpty():
+            print("List is empty.Nothing to reverse.")
+            return 
+        
+        first = self.head.next
+        last = self.tail.prev
+
+        current = first
+
+        while current != self.tail :
+            current.prev,current.next = current.next,current.prev
+            current = current.prev
+
+        self.head.next = last
+        last.prev = self.head
+        self.tail.prev = first
+        first.next = self.tail
+        
