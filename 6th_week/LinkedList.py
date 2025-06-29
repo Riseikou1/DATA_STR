@@ -1,3 +1,4 @@
+from typing import List
 class Node :
     def __init__(self,data,next=None):
         self.data = data
@@ -63,7 +64,7 @@ class ListType :
         self.head = dummy.next
         self.size += 1
     
-    def delete(self, pos):
+    def delete(self, pos:int):
         if self.isEmpty() or pos <= 0 or pos > self.size:
             return  # Invalid position or empty list
 
@@ -98,9 +99,10 @@ if __name__ == "__main__":
     L.printList()
     print(L.head.data)
 
-    L.insert('C',1)
-    L.insert('D',4)
-    L.insert('E',3)
+    L.insert(1, 'C')
+    L.insert(4, 'D')
+    L.insert(3, 'E')
+
 
     print(L.isEmpty())
     L.printList()
